@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mysql:
+    container_name: ecommerce_mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce_db
+      MYSQL_USER: ecommerce_user
+      MYSQL_PASSWORD: ecommerce_pass
+    volumes:
+      - ecommerce_mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - ecommerce_net
+    restart: unless-stopped
+
+  phpmyadmin:
+    container_name: ecommerce_phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8085:80"
+    networks:
+      - ecommerce_net
+    restart: unless-stopped
+
+networks:
+  ecommerce_net:
+    driver: bridge
+
+volumes:
+  ecommerce_mysql_data:
