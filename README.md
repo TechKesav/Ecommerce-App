@@ -104,6 +104,28 @@ Deployment on AWS/GCP
 
 ### Screenshots 
 
-## 🔑 Login Page
+## 🔑 Login Page abd Register Page
 
 <img width="1895" height="899" alt="Screenshot 2025-08-16 185748" src="https://github.com/user-attachments/assets/ee683c4a-5111-4a9b-852d-7cf925359d32" />
+<img width="1894" height="909" alt="Screenshot 2025-08-16 185822" src="https://github.com/user-attachments/assets/0a821c83-26c0-487c-a97b-de13c56ff763" />
+
+## ➕ Adding a Product & 🛒 Cart
+
+<img width="568" height="503" alt="Screenshot 2025-08-16 185609" src="https://github.com/user-attachments/assets/c51f249d-0834-45f7-bfa1-ebb9a57b9357" />
+<img width="859" height="441" alt="Screenshot 2025-08-16 185627" src="https://github.com/user-attachments/assets/5799b42f-40b3-4e65-a35e-ea930a57cfd4" />
+
+## 🛒 Product Listing with Filters
+
+<img width="1919" height="909" alt="Screenshot 2025-08-16 185532" src="https://github.com/user-attachments/assets/137b631d-125c-47b7-88bc-cf925bfcf479" />
+
+## 📈 Admin Analytics Dashboard
+
+<img width="1898" height="909" alt="Screenshot 2025-08-18 183312" src="https://github.com/user-attachments/assets/f1f8b3fa-d6b1-4efc-b4a8-86ed0e19c414" />
+
+## 💳 Payment Status
+
+<img width="1900" height="892" alt="Screenshot 2025-08-16 185649" src="https://github.com/user-attachments/assets/a545351b-55e5-490f-bc4f-868fc897a41f" />
+
+## 💳 Razorpay Payment Screen
+
+<img width="1870" height="846" alt="Screenshot 2025-08-16 190051" src="https://github.com/user-attachments/assets/a645a9df-fceb-494a-bd81-94fd515b91db" />
