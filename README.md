@@ -82,9 +82,9 @@ Run phpMyAdmin:
 docker run --name ecommerce-phpmyadmin -d --link ecommerce-mysql:db -p 8081:80 phpmyadmin/phpmyadmin
 
 
-phpMyAdmin runs at: http://localhost:8081
+phpMyAdmin runs at: http://localhost:8085
 
-📊 Screenshots (Add after running)
+## 📊 Screenshots
 
 🔑 Login Page
 
