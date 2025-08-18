@@ -57,7 +57,7 @@ cd backend
 
 
 Runs at: http://localhost:8080
-
+```bash
 3️⃣ Frontend Setup (React)
 cd frontend
 npm install
@@ -65,7 +65,7 @@ npm start
 
 
 Runs at: http://localhost:3000
-
+```bash
 4️⃣ Database Setup (Docker + MySQL + phpMyAdmin)
 docker pull mysql
 docker pull phpmyadmin/phpmyadmin
