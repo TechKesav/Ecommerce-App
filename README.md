@@ -65,6 +65,7 @@ npm start
 
 
 Runs at: http://localhost:3000
+```
 ```bash
 4️⃣ Database Setup (Docker + MySQL + phpMyAdmin)
 docker pull mysql
@@ -110,8 +111,8 @@ Order tracking system
 Email notifications
 
 Deployment on AWS/GCP
+```
+# 👨‍💻 Author
 
-👨‍💻 Author
-
-Kesavan Kavin
-📌 Aspiring Java Backend Developer | AI Enthusiast
+## Kesavan M
+📌 Aspiring software developer || Tech enthusiast || Passionate about building scalable, secure, and efficient software systems || Always eager to learn
