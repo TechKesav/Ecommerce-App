@@ -85,7 +85,7 @@ phpMyAdmin runs at: http://localhost:8085
 
 🔑 Login Page and Register page
 
-<img src="https://github.com/user-attachments/assets/2d576453-8861-4f84-9c71-64d0ef07841e" width="800"/>
+![Login Page](https://github.com/user-attachments/assets/2d576453-8861-4f84-9c71-64d0ef07841e)
 <img width="1894" height="909" alt="Screenshot 2025-08-16 185822" src="https://github.com/user-attachments/assets/a7cf6cd0-cf23-41ca-a69b-db8419ac481a" />
 
 ➕ Adding a Product and 🛒 Cart Features
