@@ -55,7 +55,7 @@ cd Ecommerce-App
 cd backend
 ./mvnw spring-boot:run
 
-
+```
 Runs at: http://localhost:8080
 ```bash
 3️⃣ Frontend Setup (React)
@@ -112,7 +112,7 @@ Email notifications
 
 Deployment on AWS/GCP
 ```
-# 👨‍💻 Author
+## 👨‍💻 Author
 
 ## Kesavan M
 📌 Aspiring software developer || Tech enthusiast || Passionate about building scalable, secure, and efficient software systems || Always eager to learn
