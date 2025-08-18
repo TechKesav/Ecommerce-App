@@ -102,8 +102,8 @@ Deployment on AWS/GCP
 ## Kesavan M
 📌 Aspiring software developer || Tech enthusiast || Passionate about building scalable, secure, and efficient software systems || Always eager to learn
 
-##screenshots 
+### Screenshots 
 
-🔑 Login Page
+## 🔑 Login Page
 
 <img width="1895" height="899" alt="Screenshot 2025-08-16 185748" src="https://github.com/user-attachments/assets/ee683c4a-5111-4a9b-852d-7cf925359d32" />
