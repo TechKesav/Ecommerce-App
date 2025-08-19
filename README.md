@@ -81,6 +81,9 @@ docker run --name ecommerce-phpmyadmin -d --link ecommerce-mysql:db -p 8081:80 p
 
 phpMyAdmin runs at: http://localhost:8085
 
+=======
+🔐 Security Highlights
+
 JWT Authentication for secure user sessions
 
 Spring Security for role-based access (User/Admin)
