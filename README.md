@@ -131,4 +131,3 @@ Deployment on AWS/GCP
 ## 💳 Razorpay Payment Screen
 
 <img width="1870" height="846" alt="Screenshot 2025-08-16 190051" src="https://github.com/user-attachments/assets/a645a9df-fceb-494a-bd81-94fd515b91db" />
-
