@@ -24,7 +24,6 @@ public class OrderController {
         this.userRepository = userRepository;
     }
 
-    // Create Razorpay Order
     @PostMapping("/create")
     public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest req,
                                          @RequestHeader("Authorization") String authHeader) {
@@ -58,8 +57,6 @@ public class OrderController {
         }
     }
 
-
-    // Update payment after success (called by frontend handler)
     @PostMapping("/update-payment")
     public ResponseEntity<?> updatePayment(@RequestBody UpdatePaymentRequest payload) {
         try {
@@ -99,7 +96,6 @@ public class OrderController {
         return ResponseEntity.ok(updated);
     }
 
-    // Get payment status by order ID
     @GetMapping("/{razorpayOrderId}/status")
     public ResponseEntity<?> getPaymentStatus(@PathVariable String razorpayOrderId) {
         try {
