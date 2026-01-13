@@ -31,3 +31,14 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment Variables ###
+.env
+
+### Documentation (Personal Notes) ###
+REDIS_MYSQL_FLOW.md
+REDIS_TESTING_GUIDE.sh
+REDIS_IMPLEMENTATION_SUMMARY.md
+REDIS_CONSOLE_OUTPUT_EXAMPLES.md
+REDIS_CACHING_GUIDE.md
+PRODUCT_CRUD_GUIDE.md

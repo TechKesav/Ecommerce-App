@@ -9,6 +9,7 @@ import HomePage from "./pages/Homepage";
 import ProductPage from "./pages/ProductPage";
 import UserPage from "./pages/UserPage";
 import CartPage from "./pages/CartPage";
+import ManageProducts from "./pages/ManageProducts";
 import Footer from "./components/Footer";
 import ProductList from "./components/ProductList";
 import ProductDetail from "./components/productDetail";
@@ -40,7 +41,7 @@ const App = () => {
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/products/:id" element={<ProductSingle />} />
-                <Route path="/products" element={ <AdminRoute> <ProductPage /> </AdminRoute>}/>
+                <Route path="/manage-products" element={ <AdminRoute> <ManageProducts /> </AdminRoute>}/>
                 <Route path="/payment/:orderId" element={<PaymentPage />} />
                 <Route path="/userpayments" element={<UserPaymentsPage />} />
                 <Route path="/admin-dashboard" element={ <AdminRoute><AdminDashboard/></AdminRoute>}/>

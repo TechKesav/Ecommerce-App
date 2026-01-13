@@ -1,17 +1,26 @@
 package com.kesav.ecommerce.user;
 
-import com.kesav.ecommerce.auth.JWTService;
-import com.kesav.ecommerce.user.User;
-import com.kesav.ecommerce.user.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import java.util.List;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.kesav.ecommerce.auth.JWTService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @CrossOrigin
@@ -41,53 +50,72 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id, HttpServletRequest request) {
-        String token = jwtService.extractTokenFromHeader(request);
-        Long tokenUserId = jwtService.extractUserId(token);
+        try {
+            String token = jwtService.extractTokenFromHeader(request);
+            Long tokenUserId = jwtService.extractUserId(token);
 
-        if (tokenUserId == null || !tokenUserId.equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Access Denied: You cannot access another user's data.");
+            if (tokenUserId == null || !tokenUserId.equals(id)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("Access Denied: You cannot access another user's data.");
+            }
+
+            return ResponseEntity.ok(userService.getUserById(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid or missing Authorization header: " + e.getMessage());
         }
-
-        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(
             @PathVariable Long id,
-            @RequestBody User updatedUser,
+            @RequestBody UserUpdateRequest updateRequest,
             HttpServletRequest request) {
 
-        String token = jwtService.extractTokenFromHeader(request);
-        Long tokenUserId = jwtService.extractUserId(token);
-
-        if (tokenUserId == null || !tokenUserId.equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Access Denied: You cannot update another user's data.");
-        }
         try {
-            return ResponseEntity.ok(userService.updateUser(id, updatedUser));
+            String token = jwtService.extractTokenFromHeader(request);
+            Long tokenUserId = jwtService.extractUserId(token);
+
+            if (tokenUserId == null || !tokenUserId.equals(id)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("Access Denied: You cannot update another user's data.");
+            }
+
+            User updatedUser = userService.updateUserWithPasswordVerification(id, updateRequest);
+            return ResponseEntity.ok(updatedUser);
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(e.getMessage());
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid or missing Authorization header: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating user: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id, HttpServletRequest request) {
-        String token = jwtService.extractTokenFromHeader(request);
-        Long tokenUserId = jwtService.extractUserId(token);
+        try {
+            String token = jwtService.extractTokenFromHeader(request);
+            Long tokenUserId = jwtService.extractUserId(token);
 
-        if (tokenUserId == null || !tokenUserId.equals(id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Access Denied: You cannot delete another user's account.");
+            if (tokenUserId == null || !tokenUserId.equals(id)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("Access Denied: You cannot delete another user's account.");
+            }
+
+            if (userService.getUserById(id).isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+
+            userService.deleteUser(id);
+            return ResponseEntity.ok("User deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid or missing Authorization header: " + e.getMessage());
         }
-
-        if (userService.getUserById(id).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
-        userService.deleteUser(id);
-        return ResponseEntity.ok("User deleted successfully");
     }
 
     @GetMapping("/csrf")
