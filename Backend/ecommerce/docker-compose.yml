@@ -30,9 +30,35 @@ services:
       - ecommerce_net
     restart: unless-stopped
 
+  redis:
+    container_name: ecommerce_redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ecommerce_redis_data:/data
+    networks:
+      - ecommerce_net
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  redis-commander:
+    container_name: ecommerce_redis_ui
+    image: ghcr.io/joeferner/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    networks:
+      - ecommerce_net
+    depends_on:
+      - redis
+    restart: unless-stopped
+
 networks:
   ecommerce_net:
     driver: bridge
 
 volumes:
   ecommerce_mysql_data:
+  ecommerce_redis_data:

@@ -6,7 +6,28 @@ const MAX_TEST_AMOUNT = 500000;
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [images, setImages] = useState({});
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   const userId = localStorage.getItem("userId");
+
+  // Load Razorpay script
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => {
+      console.log("Razorpay script loaded in CartPage");
+      setRazorpayLoaded(true);
+    };
+    script.onerror = () => {
+      console.error("Failed to load Razorpay script");
+      setRazorpayLoaded(false);
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup if needed
+    };
+  }, []);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -66,6 +87,12 @@ const CartPage = () => {
 
   const handleBuyNowAll = async () => {
     try {
+      // Check if Razorpay is loaded
+      if (!window.Razorpay) {
+        alert("Razorpay is not loaded. Please refresh the page and try again.");
+        return;
+      }
+
       let amountToCharge = totalAmount;
       if (amountToCharge > MAX_TEST_AMOUNT) {
         alert(
@@ -75,7 +102,7 @@ const CartPage = () => {
       }
 
       const createRes = await axios.post("http://localhost:8080/api/orders/create", {
-        amount: amountToCharge * 100, // paise
+        amount: amountToCharge, // Backend will multiply by 100
         currency: "INR",
         description: `Purchase of all cart items`,
       });

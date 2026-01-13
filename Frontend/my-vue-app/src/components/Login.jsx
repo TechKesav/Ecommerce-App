@@ -3,11 +3,13 @@ import { login as loginApi } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {jwtDecode} from "jwt-decode";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -79,14 +81,23 @@ const handleLogin = async (e) => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <input
-          type="password"
-          className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-3 text-gray-400 hover:text-gray-200"
+          >
+            {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+          </button>
+        </div>
         <button
           type="submit"
           disabled={isDisabled}

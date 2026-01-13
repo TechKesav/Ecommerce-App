@@ -1,0 +1,80 @@
+spring:
+  application:
+    name: ecommerce
+  
+  # Default profile is 'dev' (no Redis)
+  profiles:
+    active: dev
+  
+  # DATABASE (MySQL)
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ecommerce_db}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  # JPA & Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  
+  # Redis (Disabled by default)
+  redis:
+    enabled: false
+
+  # Security
+  security:
+    user:
+      name: user
+      password: password
+  
+  # File Upload
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  
+  # CORS
+  webflux:
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+      allowed-methods: GET,POST,PUT,DELETE
+
+# Server
+server:
+  port: ${SERVER_PORT:8080}
+
+# Logging
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+# Application Properties
+secretKey: ${JWT_SECRET:YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ==}
+razorpay:
+  keyId: ${RAZORPAY_KEY_ID:rzp_test_cDwJbY6QRF2zVw}
+  keySecret: ${RAZORPAY_KEY_SECRET:Ahsnni4WCgxLnEGh4NGjilXY}
+
+# ==========================================
+# HOW TO USE THESE PROFILES:
+# ==========================================
+# 
+# 1. DEVELOPMENT (No Redis):
+#    mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
+#    OR
+#    java -jar app.jar --spring.profiles.active=dev
+#
+# 2. PRODUCTION (With Redis):
+#    java -jar app.jar --spring.profiles.active=prod
+#    Environment variables needed:
+#    - DB_USERNAME, DB_PASSWORD
+#    - REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+#    - JWT_SECRET_KEY
+#    - RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET
+#    - SECURITY_PASSWORD
+#
+# ==========================================

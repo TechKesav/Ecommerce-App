@@ -12,6 +12,7 @@ const ProductPage = () => {
 
   const [imageFile, setImageFile] = useState(null);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { isAdmin } = useAuth();
 
@@ -26,6 +27,7 @@ const ProductPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const formData = new FormData();
     formData.append(
@@ -50,9 +52,16 @@ const ProductPage = () => {
       console.log("Product Saved:", response.data);
       setProduct({ name: "", description: "", price: "", stock: "" });
       setImageFile(null);
+      
+      // Clear message after 3 seconds
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     } catch (error) {
-      setMessage("❌ Error adding product");
-      console.error(error);
+      console.error("Error:", error.response?.data || error.message);
+      setMessage(`❌ Error adding product: ${error.response?.data?.error || error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +73,7 @@ const ProductPage = () => {
       <p className="text-red-500 text-center font-semibold">⚠️ Only admins can add products.</p>
     ) : (
       <>
-        {message && <p className="mb-3 text-green-400">{message}</p>}
+        {message && <p className={`mb-3 ${message.includes('✅') ? 'text-green-400' : 'text-red-400'}`}>{message}</p>}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="text"
@@ -91,6 +100,8 @@ const ProductPage = () => {
             value={product.price}
             onChange={handleChange}
             placeholder="Price"
+            step="0.01"
+            min="0"
             required
             className="p-2 border border-gray-700 bg-gray-800 rounded text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -101,6 +112,7 @@ const ProductPage = () => {
             value={product.stock}
             onChange={handleChange}
             placeholder="Stock Quantity"
+            min="0"
             required
             className="p-2 border border-gray-700 bg-gray-800 rounded text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -114,9 +126,10 @@ const ProductPage = () => {
 
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            disabled={loading}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:bg-gray-600"
           >
-            Add Product
+            {loading ? "Adding..." : "Add Product"}
           </button>
         </form>
       </>

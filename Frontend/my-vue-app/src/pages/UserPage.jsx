@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // helper to decode JWT token
@@ -16,8 +17,10 @@ const UserPage = () => {
   const [users, setUsers] = useState([]); // This can store one or more user objects
   const [selectedUser, setSelectedUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [updateData, setUpdateData] = useState({ name: "", email: "", phone: "" });
+  const [updateData, setUpdateData] = useState({ name: "", email: "", phone: "", password: "" });
+  const [isUpdating, setIsUpdating] = useState(false);
 
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId") // JWT from login
 
@@ -51,22 +54,70 @@ const UserPage = () => {
   // Open sidebar with user details
   const handleUserClick = (user) => {
     setSelectedUser(user);
-    setUpdateData({ name: user.name, email: user.email, phone: user.phone });
+    setUpdateData({ name: user.name, email: user.email, phone: user.phone, password: "" });
     setSidebarOpen(true);
   };
 
   // Update user
   const handleUpdate = async () => {
+    // Prevent multiple clicks
+    if (isUpdating) return;
+
+    // Validate password is provided
+    if (!updateData.password || updateData.password.trim() === "") {
+      alert("⚠️ Password is required to update user details");
+      return;
+    }
+
+    setIsUpdating(true);
+
     try {
-      await axios.put(
+      const emailChanged = selectedUser.email !== updateData.email;
+      
+      const response = await axios.put(
         `http://localhost:8080/api/users/${selectedUser.id}`,
         updateData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert("User updated successfully!");
+      
+      alert("✅ User updated successfully!");
+      
+      // If email changed, redirect to login since token is now invalid
+      if (emailChanged) {
+        alert("📧 Email changed! Please log in again with your new email: " + updateData.email);
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        navigate("/login");
+        return;
+      }
+      
+      // Refresh user data if email didn't change
+      if (userRole === "admin") {
+        axios
+          .get("http://localhost:8080/api/users", {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => setUsers(res.data))
+          .catch((err) => console.error("Error fetching users:", err));
+      } else {
+        axios
+          .get(`http://localhost:8080/api/users/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            setUsers([res.data]);
+            setSelectedUser(res.data);
+            setUpdateData({ name: res.data.name, email: res.data.email, phone: res.data.phone, password: "" });
+          })
+          .catch((err) => console.error("Error fetching user details:", err));
+      }
       setSidebarOpen(false);
     } catch (error) {
+      const errorMessage = error.response?.data || error.message || "Error updating user";
+      alert(`❌ Error: ${errorMessage}`);
       console.error("Error updating user:", error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -81,6 +132,8 @@ const UserPage = () => {
       setSidebarOpen(false);
       setUsers(users.filter((u) => u.id !== selectedUser.id));
     } catch (error) {
+      const errorMessage = error.response?.data || error.message || "Error deleting user";
+      alert(`Error: ${errorMessage}`);
       console.error("Error deleting user:", error);
     }
   };
@@ -148,16 +201,40 @@ return (
             className="border border-gray-600 bg-gray-700 p-2 w-full rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+        <div className="mb-3">
+          <label className="block text-sm text-gray-300">
+            Password (Required) <span className="text-red-400">*</span>
+          </label>
+          <input
+            type="password"
+            value={updateData.password}
+            onChange={(e) =>
+              setUpdateData({ ...updateData, password: e.target.value })
+            }
+            placeholder="Enter your current password"
+            className="border border-gray-600 bg-gray-700 p-2 w-full rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          <p className="text-xs text-gray-400 mt-1">
+            ⚠️ Required for security verification
+          </p>
+        </div>
         <button
           onClick={handleUpdate}
-          className="bg-blue-600 text-white px-4 py-2 rounded mr-2 hover:bg-blue-700"
+          disabled={isUpdating}
+          className={`px-4 py-2 rounded mr-2 transition-colors ${
+            isUpdating 
+              ? 'bg-gray-600 cursor-not-allowed opacity-50' 
+              : 'bg-blue-600 hover:bg-blue-700'
+          } text-white`}
         >
-          Update
+          {isUpdating ? '⏳ Updating...' : 'Update'}
         </button>
         {userRole === "admin" && (
           <button
             onClick={handleDelete}
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            disabled={isUpdating}
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Delete
           </button>

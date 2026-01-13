@@ -89,6 +89,43 @@ Spring Security for role-based access (User/Admin)
 
 Bucket4j rate limiting → prevents brute-force attacks
 
+---
+
+## ⚡ Redis Caching Strategy
+
+### How It Works
+
+#### On Product Retrieval (GET):
+- Check if products exist in Redis cache
+- If cached data found → Return immediately (ultra-fast response) ⚡
+- If cache miss → Query database, store in Redis, return to user
+- Cache TTL (Time To Live): Configurable based on requirements
+
+#### On Product Modification (POST/PUT/DELETE):
+- Perform database operation
+- Invalidate Redis cache automatically
+- Refresh cache with updated data
+- Ensures data consistency across layers
+
+### Benefits
+
+| Benefit | Impact |
+|---------|--------|
+| **Reduced Database Load** | Fewer queries to MySQL, lower CPU/Memory usage |
+| **Faster Response Times** | In-memory retrieval vs disk-based database queries |
+| **Improved Scalability** | Handle more concurrent users without bottlenecks |
+| **Better User Experience** | Quicker product page loads |
+| **Cost Optimization** | Reduced database resource consumption |
+
+### Cache Invalidation Events
+
+The following admin operations trigger cache updates:
+- **Add Product** → Cache updated with new product list
+- **Update Product** → Cache invalidated and refreshed
+- **Delete Product** → Cache invalidated and refreshed
+
+---
+
 ✅ Future Enhancements
 
 Wishlist feature

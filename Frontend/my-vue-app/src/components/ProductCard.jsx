@@ -15,9 +15,16 @@ const ProductCard = ({ product }) => {
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
     script.onload = () => {
-      console.log("Razorpay script loaded");
+      console.log("Razorpay script loaded in ProductCard");
+    };
+    script.onerror = () => {
+      console.error("Failed to load Razorpay script in ProductCard");
     };
     document.body.appendChild(script);
+
+    return () => {
+      // Cleanup
+    };
   }, []);
 
   useEffect(() => {

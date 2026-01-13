@@ -49,6 +49,7 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     public ResponseEntity<?> updateProduct(@PathVariable Long id,
                                            @RequestPart("product") Product product,
@@ -73,6 +74,7 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);

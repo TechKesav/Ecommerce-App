@@ -1,10 +1,19 @@
 package com.kesav.ecommerce.product;
 
-import com.kesav.ecommerce.cart.Cart;
-import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kesav.ecommerce.cart.Cart;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Product {
@@ -29,6 +38,7 @@ public class Product {
     }
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore  // Exclude from JSON serialization (needed for Redis caching)
     private List<Cart> cartItems = new ArrayList<>();
 
     // Constructors
