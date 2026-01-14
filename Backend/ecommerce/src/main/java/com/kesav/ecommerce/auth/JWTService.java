@@ -1,32 +1,36 @@
 package com.kesav.ecommerce.auth;
 
-import com.kesav.ecommerce.user.Role;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-import jakarta.servlet.http.HttpServletRequest;
-import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.crypto.SecretKey;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import com.kesav.ecommerce.user.Role;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class JWTService {
 
-    @Value("${secreteKey}")
-    private String secreteKey;
+    @Value("${JWT_SECRET}")
+    private String jwtSecret;
 
     private static String SECRET_KEY;
 
     @PostConstruct
     public void init() {
-        SECRET_KEY = secreteKey;
+        SECRET_KEY = jwtSecret;
     }
 
     // ----------------- Token Generation -----------------

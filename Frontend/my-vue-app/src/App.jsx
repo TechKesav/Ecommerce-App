@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { CartProvider } from "./context/CartContext"; // ✅ Import here
+import { CartProvider } from "./context/CartContext";
 import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -21,6 +21,7 @@ import PaymentPage from "./pages/PaymentPage";
 import UserPaymentsPage from "./pages/UserPaymentspage";
 import AdminDashboard from "./pages/AdminDashboard";
 import Unauthorized from "./pages/Unauthorized";
+import OAuth2Callback from "./pages/OAuth2Callback";
 import "./App.css";
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
                 <Route path="/" element={<Navigate to="/login" />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/oauth2/callback" element={<OAuth2Callback />} />
                 <Route path="/products" element={<ProductPage />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/users" element={<UserPage />} />

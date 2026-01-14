@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ProductGrid from "../components/ProductGrid";
+import { apiUrl } from "../config";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -10,7 +11,7 @@ const HomePage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/products")
+      .get(apiUrl("/api/products"))
       .then((res) => {
         setProducts(res.data);
         setFilteredProducts(res.data);

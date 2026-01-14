@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import useAuth from "../hooks/useAuth"; // adjust path as needed
+import { apiUrl } from "../config";
 
 const ProductPage = () => {
   const [product, setProduct] = useState({
@@ -41,7 +42,7 @@ const ProductPage = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post("http://localhost:8080/api/products", formData, {
+      const response = await axios.post(apiUrl("/api/products"), formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

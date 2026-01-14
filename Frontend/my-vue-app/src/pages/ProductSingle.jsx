@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { API_BASE_URL, apiUrl } from "../config";
 
 const ProductSingle = () => {
   const { id } = useParams();
@@ -10,7 +11,7 @@ const ProductSingle = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/products/${id}`);
+        const res = await axios.get(apiUrl(`/api/products/${id}`));
         setProduct(res.data);
       } catch (err) {
         console.error("Product fetch failed", err);
@@ -19,7 +20,7 @@ const ProductSingle = () => {
 
     const fetchImage = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/products/${id}/image`, {
+        const res = await axios.get(`${API_BASE_URL}/api/products/${id}/image`, {
           responseType: "blob",
         });
         const url = URL.createObjectURL(res.data);

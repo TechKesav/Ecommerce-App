@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { apiUrl } from "../config";
 
 const UserPage = () => {
   const [users, setUsers] = useState([]);
@@ -10,7 +11,7 @@ const UserPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/users", {
+      .get(apiUrl("/api/users"), {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUsers(res.data))
@@ -26,7 +27,7 @@ const UserPage = () => {
     if (!selectedUser) return;
     try {
       await axios.put(
-        `http://localhost:8080/api/users/${selectedUser.id}`,
+        apiUrl(`/api/users/${selectedUser.id}`),
         updateData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -41,7 +42,7 @@ const UserPage = () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(`http://localhost:8080/api/users/${selectedUser.id}`, {
+      await axios.delete(apiUrl(`/api/users/${selectedUser.id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("User deleted successfully!");

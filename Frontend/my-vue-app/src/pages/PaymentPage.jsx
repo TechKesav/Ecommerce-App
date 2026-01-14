@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaCheckCircle, FaClock, FaTimesCircle } from "react-icons/fa";
+import { apiUrl } from "../config";
 
 export default function PaymentPage() {
   const { orderId } = useParams();
@@ -15,7 +16,7 @@ export default function PaymentPage() {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`http://localhost:8080/api/orders/${orderId}/status`, {
+      .get(apiUrl(`/api/orders/${orderId}/status`), {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

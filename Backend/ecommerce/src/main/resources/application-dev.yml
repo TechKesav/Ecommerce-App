@@ -5,8 +5,8 @@ spring:
   # DATABASE (MySQL)
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ecommerce_db}?useSSL=true&requireSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${DB_USER:root}
-    password: ${DB_PASSWORD:root}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   
   # JPA & Hibernate
@@ -23,8 +23,8 @@ spring:
   data:
     redis:
       enabled: true  # ✓ ENABLED for local development - connects to Docker redis container
-      host: ${REDIS_HOST:localhost}  # Use localhost since Spring Boot runs on host machine
-      port: ${REDIS_PORT:6379}
+      host: ${REDIS_HOST}  # Use localhost since Spring Boot runs on host machine
+      port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD:}
       timeout: ${REDIS_TIMEOUT:2000ms}
 
@@ -33,6 +33,20 @@ spring:
     user:
       name: user
       password: password
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid,profile,email
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://www.googleapis.com/oauth2/v4/token
+            user-info-uri: https://www.googleapis.com/oauth2/v1/userinfo
+            user-name-attribute: sub
   
   # File Upload
   servlet:
@@ -56,7 +70,7 @@ logging:
     org.springframework.security: DEBUG
 
 # Application Properties
-secreteKey: "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ=="
+JWT_SECRET: ${JWT_SECRET}
 razorpay:
-  keyId: rzp_test_cDwJbY6QRF2zVw
-  keySecret: Ahsnni4WCgxLnEGh4NGjilXY
+  keyId: ${RAZORPAY_KEY_ID}
+  keySecret: ${RAZORPAY_KEY_SECRET}

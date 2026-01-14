@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { apiUrl } from "../config";
 
 // helper to decode JWT token
 const parseJwt = (token) => {
@@ -33,7 +34,7 @@ const UserPage = () => {
     if (userRole === "admin") {
       // If admin, fetch all users
       axios
-        .get("http://localhost:8080/api/users", {
+        .get(apiUrl("/api/users"), {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => setUsers(res.data))
@@ -41,7 +42,7 @@ const UserPage = () => {
     } else {
       // For a regular user, fetch only the details of the logged-in user
       axios
-        .get(`http://localhost:8080/api/users/${userId}`, {
+        .get(apiUrl(`/api/users/${userId}`), {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -75,7 +76,7 @@ const UserPage = () => {
       const emailChanged = selectedUser.email !== updateData.email;
       
       const response = await axios.put(
-        `http://localhost:8080/api/users/${selectedUser.id}`,
+        apiUrl(`/api/users/${selectedUser.id}`),
         updateData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -94,14 +95,14 @@ const UserPage = () => {
       // Refresh user data if email didn't change
       if (userRole === "admin") {
         axios
-          .get("http://localhost:8080/api/users", {
+          .get(apiUrl("/api/users"), {
             headers: { Authorization: `Bearer ${token}` },
           })
           .then((res) => setUsers(res.data))
           .catch((err) => console.error("Error fetching users:", err));
       } else {
         axios
-          .get(`http://localhost:8080/api/users/${userId}`, {
+          .get(apiUrl(`/api/users/${userId}`), {
             headers: { Authorization: `Bearer ${token}` },
           })
           .then((res) => {
@@ -125,7 +126,7 @@ const UserPage = () => {
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
-      await axios.delete(`http://localhost:8080/api/users/${selectedUser.id}`, {
+      await axios.delete(apiUrl(`/api/users/${selectedUser.id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("User deleted successfully!");

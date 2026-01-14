@@ -1,6 +1,7 @@
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend } from "recharts";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { apiUrl } from "../config";
 
 const AdminDashboard = () => {
   const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ const AdminDashboard = () => {
         setError(null);
 
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:8080/api/admin/sales-trend", {
+        const res = await axios.get(apiUrl("/api/admin/sales-trend"), {
           headers: {
             Authorization: `Bearer ${token}`,
           },
