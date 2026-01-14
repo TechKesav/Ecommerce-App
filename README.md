@@ -12,17 +12,17 @@ The application includes **secure authentication**, **admin dashboard for produc
 ### Architecture Diagram
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    CLIENT LAYER                              │
+│                    CLIENT LAYER                             │
 │  React.js Frontend (Netlify/Vercel)                         │
-│  - User Interface & State Management                         │
-│  - Axios HTTP Client                                         │
+│  - User Interface & State Management                        │
+│  - Axios HTTP Client                                        │
 └────────────────────────┬────────────────────────────────────┘
                          │ HTTPS Requests
                          ↓
 ┌─────────────────────────────────────────────────────────────┐
-│                 API GATEWAY / APPLICATION LAYER              │
+│                 APPLICATION LAYER                           │
 │  Spring Boot Backend (Render/AWS EC2)                       │
-│  - JWT Authentication & Authorization                        │
+│  - JWT Authentication & Authorization                       │
 │  - Rate Limiting (Bucket4j)                                 │
 │  - Business Logic & Validation                              │
 │  - Razorpay Payment Gateway Integration                     │
