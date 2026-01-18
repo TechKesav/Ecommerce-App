@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
 
   useEffect(() => {
     const script = document.createElement("script");

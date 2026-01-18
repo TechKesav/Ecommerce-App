@@ -15,7 +15,7 @@ const AdminDashboard = () => {
         setLoading(true);
         setError(null);
 
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const res = await axios.get(apiUrl("/api/admin/sales-trend"), {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -22,35 +22,26 @@ const UserPage = () => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId") // JWT from login
+  const token = sessionStorage.getItem("token");
+  const userId = sessionStorage.getItem("userId"); // JWT from login
 
   // Determine user role from the token
   const jwtPayload = parseJwt(token);
-  const userRole = jwtPayload?.role;
+  const userRole = jwtPayload?.role ? String(jwtPayload.role).toUpperCase() : null;
 
   useEffect(() => {
-    if (!token) return; // Ensure you have a token
-    if (userRole === "admin") {
-      // If admin, fetch all users
-      axios
-        .get(apiUrl("/api/users"), {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => setUsers(res.data))
-        .catch((err) => console.error("Error fetching users:", err));
-    } else {
-      // For a regular user, fetch only the details of the logged-in user
-      axios
-        .get(apiUrl(`/api/users/${userId}`), {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          setUsers([res.data]); // Place the single user in an array for consistency
-        })
-        .catch((err) => console.error("Error fetching user details:", err));
-    }
-  }, [token, userRole]);
+    if (!token || !userId) return; // Ensure you have a token and userId
+    
+    // Fetch only the logged-in user's details (for both admin and regular users)
+    axios
+      .get(apiUrl(`/api/users/${userId}`), {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setUsers([res.data]); // Place the single user in an array for consistency
+      })
+      .catch((err) => console.error("Error fetching user details:", err));
+  }, [token, userId]);
 
   // Open sidebar with user details
   const handleUserClick = (user) => {
@@ -86,32 +77,23 @@ const UserPage = () => {
       // If email changed, redirect to login since token is now invalid
       if (emailChanged) {
         alert("📧 Email changed! Please log in again with your new email: " + updateData.email);
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("userId");
         navigate("/login");
         return;
       }
       
       // Refresh user data if email didn't change
-      if (userRole === "admin") {
-        axios
-          .get(apiUrl("/api/users"), {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          .then((res) => setUsers(res.data))
-          .catch((err) => console.error("Error fetching users:", err));
-      } else {
-        axios
-          .get(apiUrl(`/api/users/${userId}`), {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          .then((res) => {
-            setUsers([res.data]);
-            setSelectedUser(res.data);
-            setUpdateData({ name: res.data.name, email: res.data.email, phone: res.data.phone, password: "" });
-          })
-          .catch((err) => console.error("Error fetching user details:", err));
-      }
+      axios
+        .get(apiUrl(`/api/users/${userId}`), {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setUsers([res.data]);
+          setSelectedUser(res.data);
+          setUpdateData({ name: res.data.name, email: res.data.email, phone: res.data.phone, password: "" });
+        })
+        .catch((err) => console.error("Error fetching user details:", err));
       setSidebarOpen(false);
     } catch (error) {
       const errorMessage = error.response?.data || error.message || "Error updating user";
@@ -144,7 +126,7 @@ return (
     {/* Sidebar List */}
     <div className="w-64 bg-gray-800 text-white p-4">
       <h2 className="text-xl font-bold mb-4">
-        {userRole === "admin" ? "Users" : "My Profile"}
+        My Profile
       </h2>
       <ul>
         {users.map((user) => (
@@ -231,15 +213,7 @@ return (
         >
           {isUpdating ? '⏳ Updating...' : 'Update'}
         </button>
-        {userRole === "admin" && (
-          <button
-            onClick={handleDelete}
-            disabled={isUpdating}
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Delete
-          </button>
-        )}
+
       </div>
     )}
   </div>

@@ -21,7 +21,7 @@ export default function ManageProducts() {
     imageFile: null
   });
 
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
 
   // Fetch all products
   useEffect(() => {

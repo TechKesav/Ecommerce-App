@@ -22,7 +22,6 @@ const handleLogin = async (e) => {
     const user = { email, password };
     const res = await loginApi(user);
 
-    console.log("Full API Response:", res);
     const token = res.data;
 
     if (!token) {
@@ -39,8 +38,8 @@ const handleLogin = async (e) => {
       return;
     }
 
-    localStorage.setItem("token", token);
-    localStorage.setItem("userId", userId);
+    sessionStorage.setItem("token", token);
+    sessionStorage.setItem("userId", userId);
 
     login(token); 
 

@@ -39,7 +39,7 @@ const ProductPage = () => {
       formData.append("imageFile", imageFile);
     }
 
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     try {
       const response = await axios.post(apiUrl("/api/products"), formData, {

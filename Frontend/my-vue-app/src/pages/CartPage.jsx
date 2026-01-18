@@ -8,7 +8,7 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [images, setImages] = useState({});
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
 
   // Load Razorpay script
   useEffect(() => {

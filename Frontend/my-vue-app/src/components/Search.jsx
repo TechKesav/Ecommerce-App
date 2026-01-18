@@ -7,7 +7,7 @@ const UserPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [updateData, setUpdateData] = useState({ name: "", email: "", phone: "" });
 
-  const token = localStorage.getItem("token"); 
+  const token = sessionStorage.getItem("token"); 
 
   useEffect(() => {
     axios

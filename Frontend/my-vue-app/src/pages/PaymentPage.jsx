@@ -13,7 +13,7 @@ export default function PaymentPage() {
   useEffect(() => {
     if (!orderId) return;
 
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     axios
       .get(apiUrl(`/api/orders/${orderId}/status`), {

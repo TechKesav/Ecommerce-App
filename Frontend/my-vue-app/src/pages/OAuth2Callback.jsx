@@ -20,8 +20,8 @@ const OAuth2Callback = () => {
 
     if (token && userId) {
       // Store token and userId
-      localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId);
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("userId", userId);
       
       // Update auth context
       login(token);
