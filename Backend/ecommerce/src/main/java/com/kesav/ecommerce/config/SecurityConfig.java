@@ -38,6 +38,9 @@ public class SecurityConfig {
     @Autowired
     private RateLimitFilter rateLimitFilter;
 
+    @Autowired
+    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
     @Value("${app.cors.allowed-origins}")
     private List<String> corsAllowedOrigins;
 
@@ -50,19 +53,31 @@ public class SecurityConfig {
                 .csrf(customizer -> customizer.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                    // Public endpoints - Auth
                     .requestMatchers("/api/auth/**", "/register", "/login").permitAll()
+                    
+                    // Public endpoints - Products (GET only)
                     .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-                        .anyRequest().authenticated()
+                    
+                    // Swagger & OpenAPI endpoints
+                    .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
+                    
+                    // OAuth2 endpoints
+                    .requestMatchers("/login/oauth2/**", "/oauth2/**").permitAll()
+                    
+                    // All other requests require authentication
+                    .anyRequest().authenticated()
                 )
-                //.formLogin(Customizer.withDefaults())
+                .oauth2Login(oauth2 -> oauth2
+                    .successHandler(oAuth2LoginSuccessHandler)
+                )
+                .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                /*.authenticationProvider(authenticationProvider())*/
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

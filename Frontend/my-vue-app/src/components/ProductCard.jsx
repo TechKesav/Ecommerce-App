@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { API_BASE_URL, apiUrl } from "../config";
 
 const ProductCard = ({ product }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -33,7 +34,7 @@ const ProductCard = ({ product }) => {
     const fetchImage = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/products/${product.id}/image`,
+          `${API_BASE_URL}/api/products/${product.id}/image`,
           { responseType: "blob" }
         );
         const objectUrl = URL.createObjectURL(response.data);
@@ -51,7 +52,7 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = async () => {
     try {
-      await axios.post("http://localhost:8080/api/cart/add", {
+      await axios.post(apiUrl("/api/cart/add"), {
         userId: userId,
         productId: product.id,
         quantity: 1,
@@ -71,7 +72,7 @@ const ProductCard = ({ product }) => {
         return;
       }
 
-      const createRes = await axios.post("http://localhost:8080/api/orders/create", {
+      const createRes = await axios.post(apiUrl("/api/orders/create"), {
         amount: product.price,
         currency: "INR",
         description: `Purchase of ${product.name}`,
@@ -91,29 +92,21 @@ const ProductCard = ({ product }) => {
           contact: "9999999999",
         },
         theme: { color: "#3399cc" },
-         handler: async function (res) {
-    try {
-      // 1️⃣ Update payment status on server
-      await axios.post("http://localhost:8080/api/orders/update-payment", {
-        razorpayOrderId: res.razorpay_order_id,
-        paymentId: res.razorpay_payment_id,
-        status: "PAID",
-      });
+        handler: async function (res) {
+          try {
+            await axios.post(apiUrl("/api/orders/update-payment"), {
+              razorpayOrderId: res.razorpay_order_id,
+              paymentId: res.razorpay_payment_id,
+              status: "PAID",
+            });
 
-      console.log("Payment successful:", res);
-
-      // 2️⃣ Navigate to payment status page
-      navigate(`/payment/${res.razorpay_order_id}`);
-    } catch (err) {
-      console.error("Payment succeeded but server update failed:", err);
-      alert(
-        "Payment succeeded but could not update server: " + err.message
-      );
-
-      navigate(`/payment/${res.razorpay_order_id}`);
-    }
-  },
-  };
+            navigate(`/payment/${res.razorpay_order_id}`);
+          } catch (err) {
+            alert("Payment succeeded but could not update server: " + err.message);
+            navigate(`/payment/${res.razorpay_order_id}`);
+          }
+        },
+      };
 
       const rzp = new window.Razorpay(options);
       rzp.on("payment.failed", function (response) {

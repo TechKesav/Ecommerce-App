@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaCheckCircle, FaClock, FaTimesCircle } from "react-icons/fa";
+import { apiUrl } from "../config";
 
 const UserPaymentsPage = () => {
   const [orders, setOrders] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("ALL");
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId"); // logged-in user's ID
+  const token = sessionStorage.getItem("token");
+  const userId = sessionStorage.getItem("userId"); // logged-in user's ID
 
   useEffect(() => {
     if (!token || !userId) return;
 
-    axios.get(`http://localhost:8080/api/orders/user/${userId}`, {
+    axios.get(apiUrl(`/api/orders/user/${userId}`), {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => {

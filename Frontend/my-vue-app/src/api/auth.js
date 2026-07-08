@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 
-const API_URL = "http://localhost:8080"; 
+const API_URL = API_BASE_URL;
 
 export const login = (user) => {
   return axios.post(`${API_URL}/login`, user, {
@@ -8,7 +9,7 @@ export const login = (user) => {
   });
 };
 axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

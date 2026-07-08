@@ -7,15 +7,55 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      maximum-pool-size: 15
-      minimum-idle: 3
-      connection-timeout: 30000
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: false
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  # OAuth2 Client Configuration for Production
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid,profile,email
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://www.googleapis.com/oauth2/v4/token
+            user-info-uri: https://www.googleapis.com/oauth2/v1/userinfo
+            user-name-attribute: sub
+
+# Disable Swagger in Production
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
+    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+
 server:
-  port: ${PORT:8080}
+  port: ${SERVER_PORT:8080}
+
+logging:
+  level:
+    root: INFO
+
+JWT_SECRET: ${JWT_SECRET}
+
+razorpay:
+  keyId: ${RAZORPAY_KEY_ID}
+  keySecret: ${RAZORPAY_KEY_SECRET}

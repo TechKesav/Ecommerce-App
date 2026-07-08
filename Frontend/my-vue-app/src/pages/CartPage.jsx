@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL, apiUrl } from "../config";
 
 const MAX_TEST_AMOUNT = 500000; 
 
@@ -7,7 +8,7 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [images, setImages] = useState({});
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
 
   // Load Razorpay script
   useEffect(() => {
@@ -32,7 +33,7 @@ const CartPage = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/cart/${userId}`);
+        const res = await axios.get(apiUrl(`/api/cart/${userId}`));
         setCartItems(res.data);
       } catch (err) {
         console.error("Failed to fetch cart:", err);
@@ -50,7 +51,7 @@ const CartPage = () => {
         cartItems.map(async (item) => {
           try {
             const res = await axios.get(
-              `http://localhost:8080/api/products/${item.product.id}/image`,
+              `${API_BASE_URL}/api/products/${item.product.id}/image`,
               { responseType: "blob" }
             );
             const objectUrl = URL.createObjectURL(res.data);
@@ -76,7 +77,7 @@ const CartPage = () => {
 
   const handleDelete = async (cartId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/cart/delete/${cartId}`);
+      await axios.delete(apiUrl(`/api/cart/delete/${cartId}`));
       setCartItems((prev) => prev.filter((item) => item.id !== cartId));
       alert("Item removed from cart");
     } catch (err) {
@@ -101,7 +102,7 @@ const CartPage = () => {
         amountToCharge = MAX_TEST_AMOUNT;
       }
 
-      const createRes = await axios.post("http://localhost:8080/api/orders/create", {
+      const createRes = await axios.post(apiUrl("/api/orders/create"), {
         amount: amountToCharge, // Backend will multiply by 100
         currency: "INR",
         description: `Purchase of all cart items`,
@@ -118,7 +119,7 @@ const CartPage = () => {
         order_id: orderData.id,
         handler: async function (res) {
           try {
-            await axios.post("http://localhost:8080/api/orders/update-payment", {
+            await axios.post(apiUrl("/api/orders/update-payment"), {
               razorpayOrderId: res.razorpay_order_id,
               paymentId: res.razorpay_payment_id,
               status: "PAID",

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {jwtDecode} from "jwt-decode";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { FcGoogle } from "react-icons/fc";
+import { API_BASE_URL } from "../config";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +22,6 @@ const handleLogin = async (e) => {
     const user = { email, password };
     const res = await loginApi(user);
 
-    console.log("Full API Response:", res);
     const token = res.data;
 
     if (!token) {
@@ -37,8 +38,8 @@ const handleLogin = async (e) => {
       return;
     }
 
-    localStorage.setItem("token", token);
-    localStorage.setItem("userId", userId);
+    sessionStorage.setItem("token", token);
+    sessionStorage.setItem("userId", userId);
 
     login(token); 
 
@@ -67,6 +68,12 @@ const handleLogin = async (e) => {
   }
 }
 };
+
+  const handleGoogleLogin = () => {
+    // Redirect to Spring Security's OAuth2 endpoint
+    // Spring Security will handle the redirect to Google
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
+  };
 
   return (
   <div className="flex flex-col items-center justify-center min-h-screen bg-black">
@@ -108,6 +115,23 @@ const handleLogin = async (e) => {
           {isDisabled ? "Please wait..." : "Login"}
         </button>
       </form>
+
+      {/* Divider */}
+      <div className="flex items-center my-6">
+        <div className="flex-1 border-t border-gray-700"></div>
+        <span className="px-4 text-gray-400 text-sm">OR</span>
+        <div className="flex-1 border-t border-gray-700"></div>
+      </div>
+
+      {/* Google OAuth Button */}
+      <button
+        onClick={handleGoogleLogin}
+        className="w-full p-3 rounded-lg bg-white text-gray-800 font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
+      >
+        <FcGoogle size={24} />
+        Continue with Google
+      </button>
+
       <p className="mt-6 text-center text-gray-400">
         Don't have an account?{" "}
         <span

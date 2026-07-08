@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import '../styles/ManageProducts.css';
+import { API_BASE_URL, apiUrl } from '../config';
 
 export default function ManageProducts() {
   const [products, setProducts] = useState([]);
@@ -20,7 +21,7 @@ export default function ManageProducts() {
     imageFile: null
   });
 
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
 
   // Fetch all products
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function ManageProducts() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8080/api/products');
+      const response = await axios.get(apiUrl('/api/products'));
       setProducts(response.data);
     } catch (err) {
       setError('Failed to load products');
@@ -74,7 +75,7 @@ export default function ManageProducts() {
         form.append('imageFile', formData.imageFile);
       }
 
-      await axios.post('http://localhost:8080/api/products', form, {
+      await axios.post(apiUrl('/api/products'), form, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
@@ -109,7 +110,7 @@ export default function ManageProducts() {
         form.append('imageFile', formData.imageFile);
       }
 
-      await axios.put(`http://localhost:8080/api/products/${editingId}`, form, {
+      await axios.put(apiUrl(`/api/products/${editingId}`), form, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
@@ -132,7 +133,7 @@ export default function ManageProducts() {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
         setLoading(true);
-        await axios.delete(`http://localhost:8080/api/products/${id}`, {
+        await axios.delete(apiUrl(`/api/products/${id}`), {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -286,7 +287,7 @@ export default function ManageProducts() {
               <div key={product.id} className="product-card">
                 <div className="product-image">
                   {product.imageData ? (
-                    <img src={`http://localhost:8080/api/products/${product.id}/image`} alt={product.name} />
+                    <img src={`${API_BASE_URL}/api/products/${product.id}/image`} alt={product.name} />
                   ) : (
                     <div className="no-image">No Image</div>
                   )}

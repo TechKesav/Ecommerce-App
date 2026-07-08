@@ -5,8 +5,6 @@ import { useAuth } from "../context/AuthContext";
 const Footer = () => {
   const { isLoggedIn, userRole } = useAuth();
 
-  console.log("Footer - isLoggedIn:", isLoggedIn, "userRole:", userRole); // Debug log
-
   return (
     <footer className="bg-gray-900 text-white py-3 px-4 flex justify-between items-center">
       <span className="text-sm">&copy; 2025 MyApp</span>

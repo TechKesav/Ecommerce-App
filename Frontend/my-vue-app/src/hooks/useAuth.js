@@ -6,16 +6,16 @@ const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!token) return;
 
     try {
       const decoded = jwtDecode(token);
-      console.log("Decoded token:", decoded);
 
       if (decoded.exp && decoded.exp * 1000 < Date.now()) {
         console.warn("Token expired");
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("userId");
         setIsAuthenticated(false);
         setIsAdmin(false);
         return;
@@ -38,6 +38,8 @@ const useAuth = () => {
       }
     } catch (e) {
       console.error("JWT decode failed:", e);
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("userId");
       setIsAuthenticated(false);
       setIsAdmin(false);
     }
